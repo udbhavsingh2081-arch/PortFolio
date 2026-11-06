@@ -1,0 +1,88 @@
+// Featured projects — only TalentTrack and StayVerse
+
+export const projects = [
+  {
+    id: "talenttrack",
+    name: "TalentTrack",
+    subtitle: "Applicant Tracking & Recruitment Management System",
+    category: "Full-Stack Web Application",
+    liveUrl: "https://talenttrack.pie.host/",
+    githubUrl: "#", // TODO: Add exact GitHub repo URL
+    techStack: [
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "EJS",
+      "Bootstrap",
+      "Passport.js",
+      "Joi",
+    ],
+    description:
+      "TalentTrack is a recruitment management platform designed to connect students and recruiters through a centralized system. It provides separate functionality for students, recruiters and administrators, allowing users to manage job opportunities, applications and recruitment activities.",
+    features: [
+      "User authentication and authorization",
+      "Role-based access control (Student / Recruiter / Admin)",
+      "Student registration and profile management",
+      "Recruiter profile and company information management",
+      "Job posting creation and management",
+      "Job browsing and application system",
+      "Shortlist / reject applicants workflow",
+      "Resume upload functionality",
+      "MongoDB integration with Joi validation",
+      "MVC-based project structure",
+    ],
+    learnings: [
+      "Building full-stack applications with Express.js and EJS",
+      "Implementing authentication and role-based authorization",
+      "Designing MongoDB schemas and relationships",
+      "Creating RESTful routes and CRUD functionality",
+      "Handling file uploads",
+      "Structuring applications using MVC architecture",
+      "Deploying Node.js applications",
+    ],
+    color: "#00D4FF",
+  },
+  {
+    id: "stayverse",
+    name: "StayVerse",
+    subtitle: "Airbnb-Inspired Accommodation Platform",
+    category: "Full-Stack Web Application",
+    liveUrl: "https://stay-verse-h1rd.onrender.com/listings",
+    githubUrl: "https://github.com/udbhavsingh2081-arch",  // TODO: Update to specific repo URL
+    techStack: [
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "EJS",
+      "Bootstrap",
+      "Passport.js",
+      "Cloudinary",
+      "Multer",
+      "Joi",
+    ],
+    description:
+      "StayVerse is an Airbnb-inspired accommodation listing platform where users can explore property listings, create their own listings and manage accommodation information. The application includes authentication, image uploads, search filters and map integration.",
+    features: [
+      "User signup and login with Passport.js",
+      "Full CRUD on property listings",
+      "Image uploads via Multer + Cloudinary",
+      "Search and category-based filtering",
+      "Map integration for property locations",
+      "Session management and flash messages",
+      "Input validation with Joi",
+      "Responsive UI",
+    ],
+    learnings: [
+      "Building a complete MVC-based web application",
+      "Implementing authentication and session management",
+      "Integrating Cloudinary for image storage",
+      "Handling file uploads",
+      "Working with geolocation and maps",
+      "Implementing search and filtering",
+      "Deploying applications using Render",
+    ],
+    color: "#8B5CF6",
+  },
+];

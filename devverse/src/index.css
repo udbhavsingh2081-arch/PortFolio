@@ -1,0 +1,159 @@
+/* ========================================================
+   DEVVERSE — SCIENTIFIC SPACE / AEROSPACE DESIGN SYSTEM
+   NASA & Modern SaaS Engineering Aesthetics
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-space-black: #050914;
+  --color-space-deep: #0A1220;
+  --color-space-surface: #101B2C;
+  --color-space-elevated: #142238;
+  --color-space-border: #243247;
+  
+  --color-primary-text: #F1F5F9;
+  --color-secondary-text: #94A3B8;
+  --color-muted-text: #64748B;
+  
+  --color-accent-primary: #38BDF8;
+  --color-accent-secondary: #60A5FA;
+  --color-accent-purple: #818CF8;
+  --color-status-active: #10B981;
+
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Base Viewport & Precision Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #243247 #050914;
+  background-color: #050914;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #050914;
+  color: #F1F5F9;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle Technical Grid Background */
+.bg-tech-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(36, 50, 71, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 50, 71, 0.25) 1px, transparent 1px);
+}
+
+/* Scientific Surface Panel */
+.scientific-panel {
+  background-color: rgba(16, 27, 44, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #243247;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.scientific-panel:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 8px 32px -8px rgba(5, 9, 20, 0.7), 0 0 16px -4px rgba(56, 189, 248, 0.15);
+}
+
+/* Primary Scientific Button */
+.btn-scientific-primary {
+  background: #38BDF8;
+  color: #050914;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-scientific-primary:hover {
+  background: #60A5FA;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Secondary Scientific Button */
+.btn-scientific-secondary {
+  background: #101B2C;
+  color: #F1F5F9;
+  border: 1px solid #243247;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-scientific-secondary:hover {
+  background: #142238;
+  border-color: #38BDF8;
+  color: #38BDF8;
+  transform: translateY(-1px);
+}
+
+/* Technical Hairline Divider */
+.scientific-divider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent 0%, #243247 25%, #243247 75%, transparent 100%);
+}
+
+/* Subtle Technical Badge */
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: rgba(16, 27, 44, 0.85);
+  border: 1px solid #243247;
+  border-radius: 4px;
+  color: #94A3B8;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #050914;
+}
+::-webkit-scrollbar-thumb {
+  background: #243247;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38BDF8;
+}
+
+/* Selection */
+::selection {
+  background: rgba(56, 189, 248, 0.25);
+  color: #F1F5F9;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

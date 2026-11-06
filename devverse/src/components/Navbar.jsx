@@ -1,6 +1,6 @@
 /* ========================================================
-   Navbar — Scientific Aerospace Navigation
-   Slim, Minimalist Header with Orbital Insignia
+   Navbar — Top Navigation Bar
+   Offset for Left Sidebar & Seamless Cyber Header
    ======================================================== */
 
 import { useState, useEffect } from "react";
@@ -10,11 +10,11 @@ import { personalData } from "../data/portfolioData";
 
 const navItems = [
   { label: "Home", href: "#hero" },
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
+  { label: "About", href: "#about-skills" },
+  { label: "Skills", href: "#about-skills" },
   { label: "Projects", href: "#projects" },
-  { label: "Education", href: "#education" },
-  { label: "Certificates", href: "#certificates" },
+  { label: "Education", href: "#education-certifications" },
+  { label: "Certificates", href: "#education-certifications" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -31,26 +31,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: "-72px 0px -40% 0px" }
-    );
-
-    navItems.forEach(({ href }) => {
-      const el = document.querySelector(href);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   const handleScrollTo = (href) => {
     setIsMobileOpen(false);
     const target = document.querySelector(href);
@@ -61,68 +41,54 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 h-[72px] transition-all duration-200 ${
+      className={`fixed top-0 left-0 md:left-16 right-0 z-30 h-[70px] transition-all duration-200 ${
         isScrolled
-          ? "bg-[#050914]/90 backdrop-blur-md border-b border-[#243247] shadow-sm shadow-[#050914]"
+          ? "bg-[#050914]/90 backdrop-blur-md border-b border-[#38BDF8]/20 shadow-md shadow-[#050914]"
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="max-w-6xl mx-auto h-full px-6 sm:px-10 lg:px-12 flex items-center justify-between">
-        {/* Brand: Orbital Symbol + DEVVERSE */}
+      <div className="max-w-6xl mx-auto h-full px-6 sm:px-10 flex items-center justify-between">
+        {/* Brand: DEVVERSE */}
         <a
           href="#hero"
           onClick={(e) => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          className="flex items-center gap-2.5 group cursor-pointer"
+          className="flex items-center gap-2 group cursor-pointer"
         >
-          <div className="w-8 h-8 rounded border border-[#243247] bg-[#101B2C] flex items-center justify-center text-[#38BDF8] group-hover:border-[#38BDF8] transition-colors">
-            <Orbit size={16} className="group-hover:rotate-90 transition-transform duration-500" />
+          <div className="w-8 h-8 rounded-lg border border-[#38BDF8]/40 bg-[#101B2C] flex items-center justify-center text-[#38BDF8] group-hover:border-[#38BDF8] group-hover:shadow-[0_0_12px_rgba(56,189,248,0.4)] transition-all">
+            <Orbit size={16} className="group-hover:rotate-180 transition-transform duration-700" />
           </div>
-          <div className="flex flex-col">
-            <span className="font-heading font-bold text-sm tracking-widest text-[#F1F5F9] group-hover:text-[#38BDF8] transition-colors">
+          <div className="flex flex-col text-left">
+            <span className="font-heading font-extrabold text-sm sm:text-base tracking-widest text-[#F1F5F9] group-hover:text-[#38BDF8] transition-colors">
               DEVVERSE
             </span>
             <span className="text-[9px] font-mono text-[#64748B] tracking-wider uppercase">
-              Orbital 01 // SDE
+              Portfolio
             </span>
           </div>
         </a>
 
-        {/* Desktop Navigation Links */}
+        {/* Desktop Nav Links */}
         <nav className="hidden lg:flex items-center gap-6">
-          {navItems.map(({ label, href }) => {
-            const isActive = activeSection === href.replace("#", "");
-            return (
-              <button
-                key={href}
-                onClick={() => handleScrollTo(href)}
-                className={`relative py-1 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer ${
-                  isActive
-                    ? "text-[#38BDF8] font-semibold"
-                    : "text-[#94A3B8] hover:text-[#F1F5F9]"
-                }`}
-              >
-                {label}
-                {isActive && (
-                  <motion.div
-                    layoutId="activeScientificIndicator"
-                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#38BDF8]"
-                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                  />
-                )}
-              </button>
-            );
-          })}
+          {navItems.map(({ label, href }) => (
+            <button
+              key={label}
+              onClick={() => handleScrollTo(href)}
+              className="relative py-1 text-xs font-mono uppercase tracking-wider text-[#94A3B8] hover:text-[#38BDF8] transition-colors cursor-pointer"
+            >
+              {label}
+            </button>
+          ))}
         </nav>
 
-        {/* Right Action: Small Technical Resume Button & Mobile Trigger */}
+        {/* Right Action: Resume Download Button & Mobile Toggle */}
         <div className="flex items-center gap-3">
           <a
             href={personalData.resumePath}
             download="Udbhav_Singh_Chouhan_Resume.pdf"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-[#101B2C] hover:bg-[#142238] border border-[#243247] hover:border-[#38BDF8] text-xs font-mono text-[#F1F5F9] hover:text-[#38BDF8] transition-all cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#101B2C] hover:bg-[#142238] border border-[#38BDF8]/40 hover:border-[#38BDF8] text-xs font-mono text-[#F1F5F9] hover:text-[#38BDF8] shadow-[0_0_10px_rgba(56,189,248,0.15)] transition-all cursor-pointer"
           >
             <FileText size={13} className="text-[#38BDF8]" />
             <span>Resume.pdf</span>
@@ -130,8 +96,8 @@ const Navbar = () => {
 
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="lg:hidden p-2 rounded bg-[#101B2C] border border-[#243247] text-[#94A3B8] hover:text-[#F1F5F9] transition-colors cursor-pointer"
-            aria-label="Toggle Menu"
+            className="lg:hidden p-2 rounded-lg bg-[#101B2C] border border-[#243247] text-[#94A3B8] hover:text-[#F1F5F9] cursor-pointer"
+            aria-label="Toggle Navigation"
           >
             {isMobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -145,28 +111,24 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-[#0A1220]/98 backdrop-blur-xl border-b border-[#243247] px-6 py-5 shadow-2xl"
+            className="lg:hidden bg-[#0A1220]/98 backdrop-blur-xl border-b border-[#38BDF8]/30 px-6 py-4 shadow-2xl"
           >
             <div className="flex flex-col gap-2">
               {navItems.map(({ label, href }) => (
                 <button
-                  key={href}
+                  key={label}
                   onClick={() => handleScrollTo(href)}
-                  className={`text-left py-2 px-3 rounded text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer ${
-                    activeSection === href.replace("#", "")
-                      ? "text-[#38BDF8] bg-[#101B2C] border-l-2 border-[#38BDF8]"
-                      : "text-[#94A3B8] hover:text-[#F1F5F9]"
-                  }`}
+                  className="text-left py-2 px-3 rounded text-xs font-mono uppercase tracking-wider text-[#94A3B8] hover:text-[#38BDF8] hover:bg-[#101B2C] transition-colors cursor-pointer"
                 >
                   {label}
                 </button>
               ))}
 
-              <div className="pt-3 border-t border-[#243247] mt-2">
+              <div className="pt-2 border-t border-[#243247] mt-2">
                 <a
                   href={personalData.resumePath}
                   download="Udbhav_Singh_Chouhan_Resume.pdf"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded bg-[#38BDF8] text-[#050914] text-xs font-mono font-bold"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-gradient-to-r from-[#0284C7] to-[#38BDF8] text-[#050914] text-xs font-mono font-bold"
                 >
                   <FileText size={14} />
                   <span>Download Resume PDF</span>

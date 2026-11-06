@@ -1,161 +1,203 @@
 /* ========================================================
-   PlanetScene — Realistic Astronomical Orbital System
-   NASA / Aerospace Engineering Celestial Visualization
+   PlanetScene — Interactive 3D Cyber Earth with Orbital Rings
+   Centerpiece 3D Earth, Orbiting Moons, and Atmospheric Glow
    ======================================================== */
 
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-function SatelliteMesh({ radius, speed, inclination, color = "#38BDF8" }) {
-  const satelliteRef = useRef();
+// Mini Orbiting Moon / Satellite Planet
+function OrbitingMoon({ radius = 2.8, speed = 0.5, size = 0.16, color = "#60A5FA", inclination = 0.25 }) {
+  const moonRef = useRef();
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime() * speed;
-    if (satelliteRef.current) {
-      satelliteRef.current.position.x = radius * Math.cos(t);
-      satelliteRef.current.position.z = radius * Math.sin(t) * Math.cos(inclination);
-      satelliteRef.current.position.y = radius * Math.sin(t) * Math.sin(inclination);
-      satelliteRef.current.rotation.y = -t;
+    if (moonRef.current) {
+      moonRef.current.position.x = radius * Math.cos(t);
+      moonRef.current.position.z = radius * Math.sin(t) * Math.cos(inclination);
+      moonRef.current.position.y = radius * Math.sin(t) * Math.sin(inclination);
+      moonRef.current.rotation.y = t * 2;
     }
   });
 
   return (
-    <group ref={satelliteRef}>
-      {/* Satellite Central Bus */}
+    <group ref={moonRef}>
       <mesh>
-        <boxGeometry args={[0.09, 0.09, 0.09]} />
-        <meshStandardMaterial color="#E2E8F0" metalness={0.9} roughness={0.2} />
+        <sphereGeometry args={[size, 24, 24]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={0.6}
+          roughness={0.4}
+          metalness={0.8}
+        />
       </mesh>
-      {/* Solar Array Panels */}
-      <mesh position={[0.13, 0, 0]}>
-        <boxGeometry args={[0.14, 0.04, 0.005]} />
-        <meshStandardMaterial color="#38BDF8" metalness={0.7} roughness={0.3} />
-      </mesh>
-      <mesh position={[-0.13, 0, 0]}>
-        <boxGeometry args={[0.14, 0.04, 0.005]} />
-        <meshStandardMaterial color="#38BDF8" metalness={0.7} roughness={0.3} />
-      </mesh>
-      {/* Telemetry Transponder Light */}
-      <mesh position={[0, 0.06, 0]}>
-        <sphereGeometry args={[0.02, 8, 8]} />
-        <meshBasicMaterial color={color} />
+      {/* Subtle Moon Glow Trail */}
+      <mesh>
+        <sphereGeometry args={[size * 1.25, 16, 16]} />
+        <meshBasicMaterial color={color} transparent opacity={0.2} />
       </mesh>
     </group>
   );
 }
 
-function OrbitalRing({ radius, inclination = 0, opacity = 0.25 }) {
-  const points = [];
-  const segments = 128;
-  for (let i = 0; i <= segments; i++) {
-    const theta = (i / segments) * Math.PI * 2;
-    points.push(
-      new THREE.Vector3(
-        radius * Math.cos(theta),
-        radius * Math.sin(theta) * Math.sin(inclination),
-        radius * Math.sin(theta) * Math.cos(inclination)
-      )
-    );
-  }
-  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+// Luminous Cyber Orbital Ring with Particles
+function CyberOrbitalRing({ innerRadius, outerRadius, tiltX = 1.2, tiltZ = 0.3, color = "#38BDF8" }) {
+  const ringRef = useRef();
+
+  useFrame((_, delta) => {
+    if (ringRef.current) {
+      ringRef.current.rotation.z += delta * 0.08;
+    }
+  });
+
+  const particleCount = 120;
+  const [positions] = useMemo(() => {
+    const pos = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (i / particleCount) * Math.PI * 2;
+      const r = innerRadius + Math.random() * (outerRadius - innerRadius);
+      pos[i * 3] = r * Math.cos(angle);
+      pos[i * 3 + 1] = r * Math.sin(angle);
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.08;
+    }
+    return [pos];
+  }, [innerRadius, outerRadius]);
 
   return (
-    <line geometry={lineGeometry}>
-      <lineBasicMaterial
-        color="#38BDF8"
-        transparent={true}
-        opacity={opacity}
-        linewidth={1}
-      />
-    </line>
+    <group rotation={[tiltX, 0, tiltZ]}>
+      {/* Ring Mesh */}
+      <mesh ref={ringRef}>
+        <ringGeometry args={[innerRadius, outerRadius, 64]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={0.8}
+          side={THREE.DoubleSide}
+          transparent
+          opacity={0.4}
+        />
+      </mesh>
+
+      {/* Orbiting Ring Particles */}
+      <points>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.035}
+          color="#F1F5F9"
+          transparent
+          opacity={0.7}
+        />
+      </points>
+    </group>
   );
 }
 
-function ScientificCelestialBody() {
-  const planetRef = useRef();
+// Main 3D Earth Globe
+function CyberEarth() {
+  const earthRef = useRef();
   const atmosphereRef = useRef();
-  const cloudRef = useRef();
+  const gridWireframeRef = useRef();
 
   useFrame((_, delta) => {
-    if (planetRef.current) {
-      planetRef.current.rotation.y += delta * 0.06;
+    if (earthRef.current) {
+      earthRef.current.rotation.y += delta * 0.12;
     }
     if (atmosphereRef.current) {
-      atmosphereRef.current.rotation.y += delta * 0.07;
+      atmosphereRef.current.rotation.y += delta * 0.14;
     }
-    if (cloudRef.current) {
-      cloudRef.current.rotation.y += delta * 0.08;
+    if (gridWireframeRef.current) {
+      gridWireframeRef.current.rotation.y -= delta * 0.06;
     }
   });
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Core Planetary Sphere */}
-      <mesh ref={planetRef}>
+      {/* Core Earth Sphere (Deep oceanic surface with electric cyan continent highlights) */}
+      <mesh ref={earthRef}>
         <sphereGeometry args={[1.5, 64, 64]} />
         <meshStandardMaterial
-          color="#0A1220"
-          roughness={0.7}
-          metalness={0.3}
-          emissive="#0B1C33"
-          emissiveIntensity={0.35}
+          color="#0A1628"
+          roughness={0.4}
+          metalness={0.6}
+          emissive="#0B2545"
+          emissiveIntensity={0.5}
         />
       </mesh>
 
-      {/* Atmospheric Thin-Layer Glow */}
-      <mesh ref={atmosphereRef}>
-        <sphereGeometry args={[1.54, 48, 48]} />
-        <meshStandardMaterial
+      {/* Cyber Grid Latitude/Longitude Lines over Earth */}
+      <mesh ref={gridWireframeRef}>
+        <sphereGeometry args={[1.52, 28, 28]} />
+        <meshBasicMaterial
           color="#38BDF8"
-          emissive="#38BDF8"
-          emissiveIntensity={0.25}
-          wireframe={true}
-          transparent={true}
-          opacity={0.12}
+          wireframe
+          transparent
+          opacity={0.22}
+        />
+      </mesh>
+
+      {/* Atmospheric Halo Layer (Cyan & Violet Rim Glow) */}
+      <mesh ref={atmosphereRef}>
+        <sphereGeometry args={[1.58, 48, 48]} />
+        <meshStandardMaterial
+          color="#22D3EE"
+          emissive="#818CF8"
+          emissiveIntensity={0.4}
+          transparent
+          opacity={0.16}
+          side={THREE.BackSide}
         />
       </mesh>
 
       {/* Outer Atmospheric Haze */}
       <mesh>
-        <sphereGeometry args={[1.65, 32, 32]} />
+        <sphereGeometry args={[1.72, 32, 32]} />
         <meshBasicMaterial
           color="#38BDF8"
-          transparent={true}
-          opacity={0.04}
+          transparent
+          opacity={0.06}
           side={THREE.BackSide}
         />
       </mesh>
 
-      {/* Mathematical Orbital Trajectories */}
-      <OrbitalRing radius={2.3} inclination={Math.PI * 0.22} opacity={0.3} />
-      <OrbitalRing radius={2.9} inclination={-Math.PI * 0.15} opacity={0.2} />
-      <OrbitalRing radius={3.4} inclination={Math.PI * 0.08} opacity={0.15} />
+      {/* Primary Cyber Orbital Ring (Cyan) */}
+      <CyberOrbitalRing innerRadius={2.1} outerRadius={2.35} tiltX={1.1} tiltZ={0.4} color="#38BDF8" />
 
-      {/* Scientific Satellites */}
-      <SatelliteMesh radius={2.3} speed={0.45} inclination={Math.PI * 0.22} color="#38BDF8" />
-      <SatelliteMesh radius={2.9} speed={-0.32} inclination={-Math.PI * 0.15} color="#60A5FA" />
-      <SatelliteMesh radius={3.4} speed={0.24} inclination={Math.PI * 0.08} color="#818CF8" />
+      {/* Secondary Orbital Ring (Subtle Purple) */}
+      <CyberOrbitalRing innerRadius={2.55} outerRadius={2.7} tiltX={-0.8} tiltZ={-0.6} color="#818CF8" />
+
+      {/* Satellite Moon 1 (Orbiting Cyan Beacon) */}
+      <OrbitingMoon radius={2.2} speed={0.4} size={0.12} color="#22D3EE" inclination={0.3} />
+
+      {/* Satellite Moon 2 (Outer Orbiting Violet Planetoid) */}
+      <OrbitingMoon radius={3.1} speed={-0.25} size={0.16} color="#818CF8" inclination={-0.4} />
     </group>
   );
 }
 
 const PlanetScene = () => {
   return (
-    <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
+    <div className="w-full h-full relative cursor-grab active:cursor-grabbing select-none">
       <Canvas
-        camera={{ position: [0, 1.4, 6.2], fov: 45 }}
+        camera={{ position: [0, 0.8, 5.8], fov: 45 }}
         dpr={[1, 1.5]}
         gl={{ antialias: true, alpha: true }}
       >
-        <ambientLight intensity={0.45} />
-        {/* Directional Sun Vector */}
-        <directionalLight position={[6, 4, 3]} intensity={2.8} color="#FFFFFF" />
-        {/* Subtle Starlight Rim Lighting */}
-        <pointLight position={[-5, -3, -4]} intensity={1.2} color="#38BDF8" />
-        <pointLight position={[0, -5, 2]} intensity={0.6} color="#60A5FA" />
+        <ambientLight intensity={0.5} />
+        {/* Direct Sun Glint */}
+        <directionalLight position={[5, 4, 3]} intensity={3.0} color="#FFFFFF" />
+        {/* Cyber Rim Light: Electric Cyan */}
+        <pointLight position={[-5, -2, -3]} intensity={2.0} color="#22D3EE" />
+        {/* Cyber Fill Light: Purple Accent */}
+        <pointLight position={[3, -4, 2]} intensity={1.2} color="#818CF8" />
 
-        <ScientificCelestialBody />
+        <CyberEarth />
       </Canvas>
     </div>
   );
